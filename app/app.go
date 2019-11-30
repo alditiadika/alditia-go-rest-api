@@ -28,7 +28,10 @@ func (a *App) Initialize() {
 func (a *App) setRouters() {
 	//user route
 	a.Get("/user", a.handleRequest(handle.GetUser))
+	a.Get("/user/{id}", a.handleRequest(handle.GetOneUser))
 	a.Post("/user", a.handleRequest(handle.Insertuser))
+	a.Put("/user/{id}", a.handleRequest(handle.UpdateUser))
+	a.Del("/user/{id}", a.handleRequest(handle.DeleteUser))
 }
 
 // Run the app on it's router
@@ -44,6 +47,16 @@ func (a *App) Get(path string, f func(w http.ResponseWriter, r *http.Request)) {
 //Post method
 func (a *App) Post(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("POST")
+}
+
+//Put method
+func (a *App) Put(path string, f func(w http.ResponseWriter, r *http.Request)) {
+	a.Router.HandleFunc(path, f).Methods("PUT")
+}
+
+//Del method
+func (a *App) Del(path string, f func(w http.ResponseWriter, r *http.Request)) {
+	a.Router.HandleFunc(path, f).Methods("DELETE")
 }
 func (a *App) handleRequest(handler func(w http.ResponseWriter, r *http.Request, Clnt *mongo.Client)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
